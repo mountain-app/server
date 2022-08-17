@@ -9,8 +9,9 @@
   },
   "scripts": {
     "clean": "npx rimraf dist",
+    "ci": "yarn install --immutable --immutable-cache --check-cache",
     "build": "yarn clean && tsc",
-    "start": "node dist/src/index.js",
+    "start": "NODE_ENV=production node dist/src/index.js",
     "dev:watch": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
     "dev": "docker-compose up --detach && yarn migrate:dev && yarn seed && yarn generate && yarn dev:watch",
     "test:unit": "jest --testPathPattern='.*/src/.*.test.ts'",
@@ -19,10 +20,12 @@
     "generate:prisma": "npx prisma generate",
     "generate": "yarn generate:nexus && yarn generate:prisma",
     "seed": "ts-node --transpile-only prisma/seed.ts",
-    "migrate:dev": "npx prisma migrate dev"
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "4.2.1",
+    "apollo-server-core": "3.10.1",
     "apollo-server-express": "3.10.1",
     "express": "4.18.1",
     "graphql-middleware": "6.1.32",

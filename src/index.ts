@@ -4,12 +4,12 @@ import App from './api/App';
 import apolloConfig from './configs/apollo';
 import serverConfig from './configs/server';
 import Server from './api/Server';
-import Redis from './clients/Redis';
-import logger from './logger';
+// import Redis from './clients/Redis';
+// import logger from './logger';
 
 const main = async (): Promise<void> => {
   const router = Router();
-  const redis = Redis.getInstance();
+  // const redis = Redis.getInstance();
 
   const app = new App([new HealthController(router)]);
   const apolloServer = new Server(app, apolloConfig);
@@ -25,14 +25,14 @@ const main = async (): Promise<void> => {
     },
   });
 
-  await redis.connect().then(() => {
-    logger.info('Redis connected');
-  });
+  //   await redis.connect().then(() => {
+  //     logger.info('Redis connected');
+  //   });
 
   app.listen(+serverConfig.PORT);
 
   process.once('SIGTERM', async () => {
-    await redis.quit();
+    // await redis.quit();
 
     apolloServer.stop();
     app.close();
