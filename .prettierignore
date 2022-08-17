@@ -1,0 +1,8 @@
+# Dependency directories
+node_modules
+
+# Typescript build directories
+dist
+
+# Nexus types
+src/api/graphql/generated
