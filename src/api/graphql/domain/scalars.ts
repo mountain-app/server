@@ -1,8 +1,4 @@
-import {
-  GraphQLDateTime,
-  GraphQLEmailAddress,
-  GraphQLUUID,
-} from 'graphql-scalars';
+import { GraphQLDateTime, GraphQLEmailAddress } from 'graphql-scalars';
 import { asNexusMethod } from 'nexus';
 
 /**
@@ -11,13 +7,6 @@ import { asNexusMethod } from 'nexus';
  * @example 'example@email.com'
  */
 export const Email = asNexusMethod(GraphQLEmailAddress, 'email');
-
-/**
- * @description A field whose value is a generic Universally Unique Identifier
- * @see https://en.wikipedia.org/wiki/Universally_unique_identifier
- * @example '75442486-0878-440c-9db1-a7006c25a39f'
- */
-export const UUID = asNexusMethod(GraphQLUUID, 'uuid');
 
 /**
  * @description A date-time string at UTC compliant with the `date-time` format

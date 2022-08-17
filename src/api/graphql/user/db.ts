@@ -4,7 +4,7 @@ export const User = objectType({
   name: 'User',
   description: 'A user of the application',
   definition(t) {
-    t.uuid('id', {
+    t.id('id', {
       description: 'The id of the user',
     });
     t.email('email', {
