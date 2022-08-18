@@ -27,7 +27,11 @@ class RestrictedController implements Controller {
      * @todo evaluate if its better to use a rest api or a graphql api (probably graphql)
      */
     const { id, name, email } = req.body;
+
     try {
+      // @todo remove this - only test
+      throw new ConflictError('User already exists');
+
       const existingUser = await Prisma.getInstance().user.findFirst({
         where: {
           OR: [{ email }, { id }],
