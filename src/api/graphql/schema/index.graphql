@@ -17,11 +17,6 @@ type Query {
   getUsers: [User]!
 }
 
-"""
-A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
-"""
-scalar UUID
-
 """A user of the application"""
 type User {
   """The timestamp the user was created"""
@@ -31,7 +26,7 @@ type User {
   email: EmailAddress!
 
   """The id of the user"""
-  id: UUID!
+  id: ID!
 
   """The name of the user"""
   name: String
