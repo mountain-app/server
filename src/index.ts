@@ -4,6 +4,7 @@ import App from './api/App';
 import apolloConfig from './configs/apollo';
 import serverConfig from './configs/server';
 import Server from './api/Server';
+import RestrictedController from './api/controllers/restricted/RestrictedController';
 // import Redis from './clients/Redis';
 // import logger from './logger';
 
@@ -11,7 +12,10 @@ const main = async (): Promise<void> => {
   const router = Router();
   // const redis = Redis.getInstance();
 
-  const app = new App([new HealthController(router)]);
+  const app = new App([
+    new HealthController(router),
+    new RestrictedController(router),
+  ]);
   const apolloServer = new Server(app, apolloConfig);
 
   await apolloServer.start();

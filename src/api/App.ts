@@ -3,6 +3,7 @@ import { Server } from 'http';
 import Controller from './controllers/Controller';
 import serverConfig from '../configs/server';
 import logger from '../logger';
+import errorHandler from './errors/errorHandler';
 
 class App {
   private app: Application;
@@ -11,7 +12,9 @@ class App {
 
   constructor(controllers: Controller[]) {
     this.app = express();
+    this.app.use(express.json());
     this.initializeControllers(controllers);
+    this.app.use(errorHandler);
   }
 
   listen(port: number): Server {
