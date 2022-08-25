@@ -23,6 +23,7 @@ export const getUserId = async (req: Request): Promise<User['id'] | null> => {
     return jwtPayload.uid;
   } catch (error) {
     logger.error(error);
-    return null;
+
+    throw new Error(JSON.stringify(error));
   }
 };

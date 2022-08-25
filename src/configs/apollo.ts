@@ -1,11 +1,13 @@
 import { Config, ExpressContext } from 'apollo-server-express';
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'; // @todo Remove apollo-server-core in real production
+import { applyMiddleware } from 'graphql-middleware';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import createContext from '../api/graphql/context';
 import schema from '../api/graphql/schema';
 import { logging } from '../logger';
+import permissions from '../api/graphql/auth/permissions';
 
 const apolloConfig: Config<ExpressContext> = {
-  schema,
+  schema: applyMiddleware(schema, permissions),
   csrfPrevention: true,
   cache: 'bounded',
   context: ({ req, res }) => createContext(req, res),

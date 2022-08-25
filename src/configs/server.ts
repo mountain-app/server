@@ -4,8 +4,8 @@ const serverConfig = {
   CORS_ORIGIN: process.env.CORS_ORIGIN || [
     'http://localhost:3000',
     'https://studio.apollographql.com',
+    'https://mountain-app-server-test.herokuapp.com/api',
   ],
-  JWT_SECRET: process.env.JWT_SECRET || 'secret',
 };
 
 export default serverConfig;
