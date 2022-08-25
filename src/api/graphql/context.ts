@@ -15,7 +15,7 @@ export interface Context {
 }
 
 const createContext = async (req: Request, res: Response): Promise<Context> => {
-  const userId = getUserId(req);
+  const userId = await getUserId(req);
   const context: Context = {
     req,
     res,

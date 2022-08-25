@@ -1,40 +1,44 @@
 import { Request } from 'express';
-import { verify } from 'jsonwebtoken';
+import { auth } from 'firebase-admin';
 import { jwtPayloadFixture } from '../../../../../tests/fixtures/jwtPayload';
-import serverConfig from '../../../../configs/server';
 import { getUserId } from './getUserId';
 
-jest.mock('jsonwebtoken', () => ({
-  verify: jest.fn(),
+jest.mock('firebase-admin', () => ({
+  auth: jest.fn(),
+  apps: ['app'],
 }));
 
 const jwtPayload = jwtPayloadFixture();
 
+const authResult = {
+  verifyIdToken: jest.fn(),
+};
+
 describe('getUserId', () => {
   beforeEach(() => {
-    (verify as jest.Mock).mockReturnValue(jwtPayload);
+    (auth as jest.Mock).mockReturnValue(authResult);
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  it("should return null if 'authorization' header is missing", () => {
+  it("should return null if 'authorization' header is missing", async () => {
     const req = {
       headers: {},
     } as Request;
 
-    const userId = getUserId(req);
+    const userId = await getUserId(req);
 
-    expect(verify).not.toHaveBeenCalled();
+    expect(auth).not.toHaveBeenCalled();
+    expect(authResult.verifyIdToken).not.toHaveBeenCalled();
     expect(userId).toBeNull();
   });
 
-  it('should return null if JWT payload is invalid', () => {
-    (verify as jest.Mock).mockReturnValue({
-      ...jwtPayload,
-      sub: undefined,
-    });
+  it('should return null if JWT payload is invalid', async () => {
+    (authResult.verifyIdToken as jest.Mock).mockRejectedValue(
+      new Error('Invalid JWT payload')
+    );
 
     const req = {
       headers: {
@@ -42,22 +46,26 @@ describe('getUserId', () => {
       },
     } as Request;
 
-    const userId = getUserId(req);
+    const userId = await getUserId(req);
 
-    expect(verify).toHaveBeenCalledWith('invalid', serverConfig.JWT_SECRET);
+    expect(auth).toHaveBeenCalled();
+    expect(authResult.verifyIdToken).toHaveBeenCalledWith('invalid');
     expect(userId).toBeNull();
   });
 
-  it("should return the user id if it's present in the JWT payload", () => {
+  it("should return the user id if it's present in the JWT payload", async () => {
+    (authResult.verifyIdToken as jest.Mock).mockResolvedValue(jwtPayload);
+
     const req = {
       headers: {
         authorization: 'Bearer token',
       },
     } as Request;
 
-    const userId = getUserId(req);
+    const userId = await getUserId(req);
 
-    expect(verify).toHaveBeenCalledWith('token', serverConfig.JWT_SECRET);
-    expect(userId).toEqual(jwtPayload.sub);
+    expect(auth).toHaveBeenCalled();
+    expect(authResult.verifyIdToken).toHaveBeenCalledWith('token');
+    expect(userId).toEqual(jwtPayload.uid);
   });
 });

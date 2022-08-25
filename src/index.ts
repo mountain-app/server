@@ -4,11 +4,15 @@ import App from './api/App';
 import apolloConfig from './configs/apollo';
 import serverConfig from './configs/server';
 import Server from './api/Server';
+import Firebase from './clients/Firebase';
 // import Redis from './clients/Redis';
 // import logger from './logger';
 
 const main = async (): Promise<void> => {
+  Firebase.initialize();
+
   const router = Router();
+
   // const redis = Redis.getInstance();
 
   const app = new App([new HealthController(router)]);

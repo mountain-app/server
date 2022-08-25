@@ -1,10 +1,11 @@
-import { allow, shield } from 'graphql-shield';
+import { allow, and, shield } from 'graphql-shield';
+import { isAuthenticatedRule } from './rules';
 
 export default shield(
   {
     Query: {
       '*': allow,
-      // getUsers: and(isAuthenticatedRule),
+      currentUser: and(isAuthenticatedRule),
     },
   },
   { allowExternalErrors: true }
