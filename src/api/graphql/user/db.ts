@@ -1,4 +1,10 @@
-import { objectType } from 'nexus';
+import { enumType, objectType } from 'nexus';
+
+const Gender = enumType({
+  name: 'Gender',
+  description: "The user's gender",
+  members: ['MALE', 'FEMALE', 'UNKNOWN'],
+});
 
 export const User = objectType({
   name: 'User',
@@ -10,8 +16,18 @@ export const User = objectType({
     t.email('email', {
       description: 'The email of the user',
     });
-    t.nullable.string('name', {
-      description: 'The name of the user',
+    t.string('firstName', {
+      description: 'The first name of the user',
+    });
+    t.string('lastName', {
+      description: 'The last name of the user',
+    });
+    t.dateTime('birthday', {
+      description: 'The birthday of the user',
+    });
+    t.field('gender', {
+      description: 'The gender of the user',
+      type: Gender,
     });
     t.dateTime('createdAt', {
       description: 'The timestamp the user was created',
